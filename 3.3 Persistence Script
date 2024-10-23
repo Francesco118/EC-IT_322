@@ -1,0 +1,52 @@
+#!/bin/bash
+# First, create a simple script to demonstrate persistence
+cat > ~/persistence_demo.sh << 'EOF'
+#!/bin/bash
+
+# Log the execution time and date
+echo "[$(date)] Script executed successfully" >> ~/persistence_log.txt
+
+# Display a message to the terminal
+echo "Persistence demonstration script executed!"
+EOF
+
+# Make the script executable
+chmod +x ~/persistence_demo.sh
+
+# Add the script to .bashrc for persistence
+echo "
+# Persistence demo
+if [ -f ~/persistence_demo.sh ]; then
+    ~/persistence_demo.sh
+fi" >> ~/.bashrc
+
+# Create a test script to verify the persistence
+cat > ~/test_persistence.sh << 'EOF'
+#!/bin/bash
+
+# Check if the script exists
+if [ -f ~/persistence_demo.sh ]; then
+    echo "✓ Persistence script exists"
+else
+    echo "✗ Persistence script not found"
+fi
+
+# Check if .bashrc contains the persistence entry
+if grep -q "persistence_demo.sh" ~/.bashrc; then
+    echo "✓ .bashrc contains persistence entry"
+else
+    echo "✗ .bashrc missing persistence entry"
+fi
+
+# Check if the log file exists and show last execution
+if [ -f ~/persistence_log.txt ]; then
+    echo "✓ Log file exists"
+    echo "Last execution:"
+    tail -n 1 ~/persistence_log.txt
+else
+    echo "✗ No log file found"
+fi
+EOF
+
+# Make the test script executable
+chmod +x ~/test_persistence.sh
